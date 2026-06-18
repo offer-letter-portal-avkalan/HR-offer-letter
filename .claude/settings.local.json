@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create *)",
+      "Bash(npm run *)",
+      "Bash(npx vite *)",
+      "Bash(curl -s http://localhost:3000)",
+      "PowerShell(Stop-Process -Name \"node\" -Force -ErrorAction SilentlyContinue)",
+      "PowerShell(Stop-Process -Name \"electron\" -Force -ErrorAction SilentlyContinue)",
+      "PowerShell(Remove-Item Env:ELECTRON_RUN_AS_NODE -ErrorAction SilentlyContinue; [System.Environment]::SetEnvironmentVariable\\(\"ELECTRON_RUN_AS_NODE\", $null, \"User\"\\); [System.Environment]::SetEnvironmentVariable\\(\"ELECTRON_RUN_AS_NODE\", $null, \"Machine\"\\); Write-Host \"Cleared. Current value:\" $env:ELECTRON_RUN_AS_NODE)",
+      "PowerShell(Write-Host \"User level:\" \\([System.Environment]::GetEnvironmentVariable\\(\"ELECTRON_RUN_AS_NODE\", \"User\"\\)\\); Write-Host \"Machine level:\" \\([System.Environment]::GetEnvironmentVariable\\(\"ELECTRON_RUN_AS_NODE\", \"Machine\"\\)\\); Write-Host \"Current session:\" $env:ELECTRON_RUN_AS_NODE)"
+    ]
+  }
+}

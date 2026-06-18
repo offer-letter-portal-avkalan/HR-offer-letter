@@ -1,0 +1,43 @@
+{
+  "name": "offer-letter-portal-desktop",
+  "version": "1.0.0",
+  "description": "Secure desktop viewer for Offer Letter Portal",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "powershell -ExecutionPolicy Bypass -File start.ps1",
+    "dev": "powershell -ExecutionPolicy Bypass -File start.ps1",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux"
+  },
+  "dependencies": {
+    "electron-store": "^8.2.0"
+  },
+  "devDependencies": {
+    "electron": "^31.7.7",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.offerportal.desktop",
+    "productName": "Offer Letter Portal",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    }
+  },
+  "allowScripts": {
+    "electron@31.7.7": true
+  }
+}
