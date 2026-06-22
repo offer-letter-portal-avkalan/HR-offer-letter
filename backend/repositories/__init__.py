@@ -4,6 +4,7 @@ from .offer_letter_repository import OfferLetterRepository
 from .answer_repository import AnswerRepository
 from .submission_repository import SubmissionRepository
 from .refresh_token_repository import RefreshTokenRepository
+from .audit_log_repository import AuditLogRepository
 
 __all__ = [
     "UserRepository",
@@ -12,4 +13,5 @@ __all__ = [
     "AnswerRepository",
     "SubmissionRepository",
     "RefreshTokenRepository",
+    "AuditLogRepository",
 ]

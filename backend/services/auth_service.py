@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from repositories import UserRepository, RefreshTokenRepository
+from repositories import UserRepository, RefreshTokenRepository, AuditLogRepository
 from models.user import User, UserRole
 from models.refresh_token import RefreshToken
 from schemas.auth import LoginRequest, RegisterRequest, TokenResponse
@@ -19,6 +19,7 @@ class AuthService:
     def __init__(self, db: AsyncSession):
         self.user_repo = UserRepository(db)
         self.token_repo = RefreshTokenRepository(db)
+        self.audit_repo = AuditLogRepository(db)
 
     async def register(self, data: RegisterRequest) -> TokenResponse:
         if await self.user_repo.get_by_email(data.email):
@@ -31,9 +32,10 @@ class AuthService:
             email=data.email,
             hashed_password=hash_password(data.password),
             full_name=data.full_name,
-            role=data.role,
+            role=UserRole(data.role),
         )
         user = await self.user_repo.create(user)
+        await self.audit_repo.log("register", user_id=user.id, resource_type="user", resource_id=user.id)
 
         access_token = create_access_token(user.id, user.role.value)
         refresh_token = create_refresh_token(user.id)
@@ -79,6 +81,7 @@ class AuthService:
                 expires_at=expires_at,
             )
         )
+        await self.audit_repo.log("login", user_id=user.id, resource_type="user", resource_id=user.id)
 
         return TokenResponse(
             access_token=access_token,
@@ -131,9 +134,11 @@ class AuthService:
             expires_in=settings.JWT_ACCESS_EXPIRE_MINUTES * 60,
         )
 
-    async def logout(self, refresh_token: str) -> None:
+    async def logout(self, refresh_token: str, user_id: uuid.UUID | None = None) -> None:
         token_hash = hash_token(refresh_token)
         await self.token_repo.revoke(token_hash)
+        await self.audit_repo.log("logout", user_id=user_id, resource_type="user", resource_id=user_id)
 
     async def logout_all(self, user_id: uuid.UUID) -> None:
         await self.token_repo.revoke_all_for_user(user_id)
+        await self.audit_repo.log("logout_all", user_id=user_id, resource_type="user", resource_id=user_id)

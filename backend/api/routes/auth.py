@@ -36,7 +36,7 @@ async def logout(
     db: AsyncSession = Depends(get_db),
 ):
     service = AuthService(db)
-    await service.logout(body.refresh_token)
+    await service.logout(body.refresh_token, user_id=current_user.id)
 
 
 @router.post("/logout-all", status_code=status.HTTP_204_NO_CONTENT)

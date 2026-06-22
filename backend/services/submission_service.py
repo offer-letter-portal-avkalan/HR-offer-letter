@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from repositories import SubmissionRepository, OfferLetterRepository, QuestionRepository, AnswerRepository
+from repositories import SubmissionRepository, OfferLetterRepository, QuestionRepository, AnswerRepository, AuditLogRepository
 from models.submission import Submission, SubmissionStatus
 from schemas.submission import SubmissionCreate, SubmissionStatusUpdate, SubmissionResponse, SubmissionListResponse
 from utils.logger import get_logger
@@ -17,6 +17,7 @@ class SubmissionService:
         self.offer_repo = OfferLetterRepository(db)
         self.question_repo = QuestionRepository(db)
         self.answer_repo = AnswerRepository(db)
+        self.audit_repo = AuditLogRepository(db)
 
     async def submit(
         self,
@@ -60,6 +61,7 @@ class SubmissionService:
             user_agent=user_agent,
         )
         created = await self.repo.create(submission)
+        await self.audit_repo.log("submission_created", user_id=candidate_id, resource_type="submission", resource_id=created.id)
         logger.info("submission_created", submission_id=str(created.id), candidate_id=str(candidate_id))
         return SubmissionResponse.model_validate(created)
 

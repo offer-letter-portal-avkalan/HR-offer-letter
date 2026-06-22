@@ -4,6 +4,7 @@ from .offer_letter import OfferLetter
 from .answer import Answer
 from .submission import Submission, SubmissionStatus, SignatureType
 from .refresh_token import RefreshToken
+from .audit_log import AuditLog
 
 __all__ = [
     "User", "UserRole",
@@ -12,4 +13,5 @@ __all__ = [
     "Answer",
     "Submission", "SubmissionStatus", "SignatureType",
     "RefreshToken",
+    "AuditLog",
 ]

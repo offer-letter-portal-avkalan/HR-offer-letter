@@ -231,15 +231,22 @@ export function LoginPage() {
           </form>
 
           <div className="mt-8 pt-6 border-t border-gray-100 text-center">
-            <p className="text-sm text-gray-500">
-              Don't have an account?{' '}
-              <Link
-                to={`/register?role=${portal}`}
-                className={`font-semibold hover:underline ${portal === 'hr_admin' ? 'text-indigo-600 hover:text-indigo-700' : 'text-blue-600 hover:text-blue-700'}`}
-              >
-                Register as {portal === 'hr_admin' ? 'HR Admin' : 'Candidate'} →
-              </Link>
-            </p>
+            {portal === 'hr_admin' ? (
+              <p className="text-sm text-gray-500">
+                Don't have an account?{' '}
+                <Link
+                  to="/register?role=hr_admin"
+                  className="font-semibold hover:underline text-indigo-600 hover:text-indigo-700"
+                >
+                  Register as HR Admin →
+                </Link>
+              </p>
+            ) : (
+              <p className="text-sm text-gray-500">
+                Your account is created by HR.{' '}
+                <span className="font-medium text-gray-600">Contact your HR team for access.</span>
+              </p>
+            )}
           </div>
         </div>
 

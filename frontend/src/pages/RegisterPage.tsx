@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { api } from '@/services/api'
 
@@ -38,6 +38,10 @@ export function RegisterPage() {
     trigger,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({ resolver: zodResolver(schema) })
+
+  if (!isHR) {
+    return <Navigate to="/login" replace />
+  }
 
   const goNext = async () => {
     const ok = await trigger(['first_name', 'last_name', 'email', 'position'])

@@ -1,7 +1,6 @@
 import uuid as _uuid
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.pool import NullPool
 from .settings import settings
 
 
@@ -11,12 +10,20 @@ def _unique_stmt_name() -> str:
 
 engine = create_async_engine(
     settings.DATABASE_URL,
-    poolclass=NullPool,
+    pool_size=5,
+    max_overflow=5,
+    pool_timeout=30,
+    pool_recycle=300,
+    pool_pre_ping=True,
     echo=settings.APP_DEBUG,
     connect_args={
         "ssl": "require",
         "statement_cache_size": 0,
         "prepared_statement_name_func": _unique_stmt_name,
+        "command_timeout": 30,
+        "server_settings": {
+            "application_name": "offer_letter_portal",
+        },
     },
 )
 
